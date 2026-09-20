@@ -1,0 +1,10 @@
+<extentreports>
+    <configuration>
+        <reportName>Login Automation Report</reportName>
+        <theme>standard</theme>
+        <documentTitle>Automation Results</documentTitle>
+        <encoding>utf-8</encoding>
+        <protocol>https</protocol>
+        <timeStampFormat>MMM dd, yyyy HH:mm:ss</timeStampFormat>
+    </configuration>
+</extentreports>
