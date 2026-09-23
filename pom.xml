@@ -50,6 +50,58 @@
         </plugins>
     </build>
 
+    <profiles>
+
+        <!-- API tests -->
+        <profile>
+            <id>api-tests</id>
+            <activation>
+                <property>
+                    <name>testType</name>
+                    <value>API</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/api/tests/**/*.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- UI / Cucumber tests -->
+        <profile>
+            <id>ui-tests</id>
+            <activation>
+                <property>
+                    <name>testType</name>
+                    <value>UI</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/cucumberOptions/**/*.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
 
     <dependencies>
         <!-- Selenium -->
