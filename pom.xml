@@ -40,8 +40,12 @@
                             <name>dataproviderthreadcount</name>
                             <value>${parallelThreads}</value>
                         </property>
-                    </properties>
 
+                        <property>
+                            <name>listener</name>
+                            <value>api.utils.ApiExtentReportListener</value>
+                        </property>
+                    </properties>
                 </configuration>
 
 

@@ -48,17 +48,7 @@ public class DataDrivenUserApiTest {
                 }
         };
     }
-    @BeforeMethod
-    public void startApiTest(ITestResult result) {
-        ApiExtentReportManager.startTest(
-                result.getMethod().getMethodName()
-        );
-    }
 
-    @AfterSuite
-    public void flushApiReport() {
-        ApiExtentReportManager.flush();
-    }
     @Test(dataProvider = "userData")
     public void getUserDataDrivenTest(
             int userId,
