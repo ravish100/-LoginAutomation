@@ -1,8 +1,8 @@
 <extentreports>
     <configuration>
-        <reportName>Login Automation Report</reportName>
+        <reportName>Login Automation - Automation Test Report</reportName>
         <theme>standard</theme>
-        <documentTitle>Automation Results</documentTitle>
+        <documentTitle>LoginAutomation Test Results</documentTitle>
         <encoding>utf-8</encoding>
         <protocol>https</protocol>
         <timeStampFormat>MMM dd, yyyy HH:mm:ss</timeStampFormat>

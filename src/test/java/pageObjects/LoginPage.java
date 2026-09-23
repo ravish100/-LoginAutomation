@@ -45,24 +45,23 @@ public class LoginPage extends BasePage {
 
     public String getInvalidCredentialsMessage() {
 
-        wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        invalidCredentialsMessage
-                )
-        );
+        return wait.until(driver -> {
+            WebElement element =
+                    driver.findElement(invalidCredentialsMessage);
 
-        wait.until(
-                ExpectedConditions.textToBePresentInElementLocated(
-                        invalidCredentialsMessage,
-                        "Incorrect"
-                )
-        );
+            if (!element.isDisplayed()) {
+                return null;
+            }
 
-        return driver.findElement(invalidCredentialsMessage)
-                .getText()
-                .trim();
+            String text = element.getText().trim();
+
+            if (text.toLowerCase().contains("incorrect")) {
+                return text;
+            }
+
+            return null;
+        });
     }
-
 
     public boolean isUsernameFieldEmpty() {
 

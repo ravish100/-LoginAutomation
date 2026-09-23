@@ -1,5 +1,4 @@
-
-        package hooks;
+package hooks;
 
 import driverFactory.DriverFactory;
 import io.cucumber.java.After;
@@ -12,6 +11,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.HasCapabilities;
 import utils.ConfigReader;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -35,11 +35,17 @@ public class Hooks {
     @Before
     public void setUp() {
 
-        logger.info("Starting browser...");
+        logger.info(
+                "Starting browser | Thread={}",
+                Thread.currentThread().getName()
+        );
 
         DriverFactory.initializeDriver();
 
-        logger.info("Browser started successfully.");
+        logger.info(
+                "Browser started successfully | Thread={}",
+                Thread.currentThread().getName()
+        );
     }
 
     @After
@@ -52,23 +58,40 @@ public class Hooks {
             if (scenario.isFailed()) {
 
                 logger.error(
-                        "Scenario failed: {}",
-                        scenario.getName()
+                        "Scenario failed | Scenario={} | Thread={}",
+                        scenario.getName(),
+                        Thread.currentThread().getName()
                 );
 
                 captureFailureScreenshot(
                         driver,
                         scenario
                 );
+
+            } else {
+
+                logger.info(
+                        "Scenario passed | Scenario={} | Thread={}",
+                        scenario.getName(),
+                        Thread.currentThread().getName()
+                );
             }
 
         } finally {
 
-            logger.info("Closing browser...");
+            logger.info(
+                    "Closing browser | Scenario={} | Thread={}",
+                    scenario.getName(),
+                    Thread.currentThread().getName()
+            );
 
             DriverFactory.quitDriver();
 
-            logger.info("Browser cleanup completed.");
+            logger.info(
+                    "Browser cleanup completed | Scenario={} | Thread={}",
+                    scenario.getName(),
+                    Thread.currentThread().getName()
+            );
         }
     }
 
@@ -93,8 +116,9 @@ public class Hooks {
             String currentUrl = driver.getCurrentUrl();
 
             logger.info(
-                    "Capturing failure screenshot. URL: {}",
-                    currentUrl
+                    "Capturing failure screenshot | URL={} | Thread={}",
+                    currentUrl,
+                    Thread.currentThread().getName()
             );
 
             /*
@@ -139,7 +163,6 @@ public class Hooks {
         } catch (Exception e) {
 
             /*
-             * Important:
              * Screenshot failure must NOT replace
              * the original scenario failure.
              */
@@ -166,11 +189,21 @@ public class Hooks {
                 ((HasCapabilities) driver)
                         .getCapabilities()
                         .getBrowserName();
+
+        String executionMode =
+                ConfigReader.getProperty("executionMode");
+
+        String gridUrl =
+                ConfigReader.getProperty("gridUrl");
+
+        String threadName =
+                Thread.currentThread().getName();
+
         String timestamp =
                 LocalDateTime.now()
                         .format(TIMESTAMP_FORMAT);
 
-        int headerHeight = 120;
+        int headerHeight = 170;
 
         BufferedImage finalImage =
                 new BufferedImage(
@@ -184,7 +217,9 @@ public class Hooks {
 
         try {
 
-            // Header background
+            /*
+             * Header background
+             */
             graphics.setColor(Color.WHITE);
 
             graphics.fillRect(
@@ -194,7 +229,9 @@ public class Hooks {
                     headerHeight
             );
 
-            // Header title
+            /*
+             * Header title
+             */
             graphics.setColor(Color.BLACK);
 
             graphics.setFont(
@@ -211,7 +248,9 @@ public class Hooks {
                     25
             );
 
-            // Scenario
+            /*
+             * Scenario
+             */
             graphics.setFont(
                     new Font(
                             "Arial",
@@ -226,22 +265,66 @@ public class Hooks {
                     50
             );
 
-            // URL
+            /*
+             * URL
+             */
             graphics.drawString(
                     "URL: " + currentUrl,
                     20,
                     70
             );
 
-            // Browser + timestamp
+            /*
+             * Browser
+             */
             graphics.drawString(
-                    "Browser: " + browser
-                            + "    Time: " + timestamp,
+                    "Browser: " + browser,
                     20,
                     90
             );
 
-            // Original screenshot
+            /*
+             * Execution mode
+             */
+            graphics.drawString(
+                    "Execution Mode: " + executionMode,
+                    20,
+                    110
+            );
+
+            /*
+             * Thread
+             */
+            graphics.drawString(
+                    "Thread: " + threadName,
+                    20,
+                    130
+            );
+
+            /*
+             * Grid URL
+             */
+            if ("grid".equalsIgnoreCase(executionMode)
+                    && gridUrl != null
+                    && !gridUrl.isBlank()) {
+
+                graphics.drawString(
+                        "Grid URL: " + gridUrl,
+                        20,
+                        150
+                );
+            } else {
+
+                graphics.drawString(
+                        "Grid URL: N/A",
+                        20,
+                        150
+                );
+            }
+
+            /*
+             * Original screenshot
+             */
             graphics.drawImage(
                     originalImage,
                     0,

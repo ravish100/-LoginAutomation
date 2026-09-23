@@ -52,6 +52,7 @@ Feature: Login functionality
     And User clicks on login button
     Then User should see "Invalid credentials"
 
+
   @regression @login @negative
   Scenario: Password containing special characters
     When User enters credentials for "specialCharacterPassword"
