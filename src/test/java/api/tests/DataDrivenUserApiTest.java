@@ -7,6 +7,10 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import api.utils.ApiTestDataReader;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
+import api.utils.ApiExtentReportManager;
 
 public class DataDrivenUserApiTest {
 
@@ -44,7 +48,17 @@ public class DataDrivenUserApiTest {
                 }
         };
     }
+    @BeforeMethod
+    public void startApiTest(ITestResult result) {
+        ApiExtentReportManager.startTest(
+                result.getMethod().getMethodName()
+        );
+    }
 
+    @AfterSuite
+    public void flushApiReport() {
+        ApiExtentReportManager.flush();
+    }
     @Test(dataProvider = "userData")
     public void getUserDataDrivenTest(
             int userId,
@@ -77,6 +91,10 @@ public class DataDrivenUserApiTest {
                 "Expected HTTP status 200"
         );
 
+        ApiExtentReportManager.pass(
+                "HTTP Status: " + response.getStatusCode()
+        );
+
         String actualName =
                 response.jsonPath()
                         .getString("name");
@@ -85,6 +103,11 @@ public class DataDrivenUserApiTest {
                 actualName,
                 expectedName,
                 "User name does not match expected value"
+        );
+        ApiExtentReportManager.pass(
+                "User ID: " + userId
+                        + " | Expected Name: " + expectedName
+                        + " | Actual Name: " + actualName
         );
 
         System.out.println(
